@@ -248,7 +248,7 @@ class SharedRedisCache:
                 best_response = self._redis.hget(key, "response")
                 best_cached_query = cached_query
 
-        if best_score >= self.similarity_threshold and best_response is not None:
+        if best_score >= self.similarity_threshold and best_response is not None and best_cached_query is not None:
             if _looks_like_false_hit(query, best_cached_query):
                 self.false_hit_log.append({
                     "query": query,

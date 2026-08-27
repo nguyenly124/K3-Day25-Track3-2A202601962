@@ -66,10 +66,11 @@ def calculate_recovery_time_ms(gateway: ReliabilityGateway) -> float | None:
     for breaker in gateway.breakers.values():
         open_ts: float | None = None
         for entry in breaker.transition_log:
+            ts = float(entry["ts"])
             if entry["to"] == "open":
-                open_ts = entry["ts"]
+                open_ts = ts
             elif entry["to"] == "closed" and open_ts is not None:
-                recovery_times.append((entry["ts"] - open_ts) * 1000)
+                recovery_times.append((ts - open_ts) * 1000)
                 open_ts = None
     if not recovery_times:
         return None

@@ -77,8 +77,9 @@ class RunMetrics(BaseModel):
 
         # Flatten scenarios into individual columns
         scenarios = report.pop("scenarios", {})
-        for name, status in scenarios.items():
-            report[f"scenario_{name}"] = status
+        if isinstance(scenarios, dict):
+            for name, status in scenarios.items():
+                report[f"scenario_{name}"] = status
 
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", newline="") as f:

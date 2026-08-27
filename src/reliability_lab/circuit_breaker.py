@@ -55,10 +55,11 @@ class CircuitBreaker:
         if self.state == CircuitState.HALF_OPEN:
             return True
         # OPEN: check if timeout has elapsed
-        elapsed = time.monotonic() - self.opened_at
-        if elapsed >= self.reset_timeout_seconds:
-            self._transition(CircuitState.HALF_OPEN, "timeout_elapsed")
-            return True
+        if self.opened_at is not None:
+            elapsed = time.monotonic() - self.opened_at
+            if elapsed >= self.reset_timeout_seconds:
+                self._transition(CircuitState.HALF_OPEN, "timeout_elapsed")
+                return True
         return False
 
     def call(self, fn: Callable[..., T], *args: object, **kwargs: object) -> T:
